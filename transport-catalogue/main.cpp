@@ -1,11 +1,20 @@
-#include "stat_reader.h"
-#include "input_reader.h"
+#include "json_reader.h"
+#include "request_handler.h"
 
-using namespace transport_catalog;
 
 int main() {
-    TransportCatalogue catalogue;
-    std::ostream& output = std::cout;
-    ReadData(std::cin, catalogue);
-    ProcessRequests(output, catalogue);
+
+transport_catalog ::TransportCatalogue catalogue;
+   
+JsonReader json_doc(std::cin);
+json_doc.FillCatalogue(catalogue);
+
+const auto& stat_requests = json_doc.GetStatRequests();
+const auto& render_settings = json_doc.GetRenderSettings().AsMap();
+const auto& renderer = json_doc.FillRenderSettings(render_settings);
+    
+RequestHandler rh(catalogue, renderer);
+    
+rh.RequestOut(stat_requests);
+    
 }
