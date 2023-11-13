@@ -225,110 +225,99 @@ namespace json {
             }
         }
 
-    }  // namespace
-
-    Node::Node(std::nullptr_t)
-        : value_(nullptr) {
-    }
-
-    Node::Node(std::string value)
-        : value_(std::move(value)) {
-    }
-
-    Node::Node(int value)
-        : value_(value) {
-    }
-
-    Node::Node(double value)
-        : value_(value) {
-    }
-
-    Node::Node(bool value)
-        : value_(value) {
-    }
-
-    Node::Node(Array array)
-        : value_(std::move(array)) {
-    }
-
-    Node::Node(Dict map)
-        : value_(std::move(map)) {
-    }
-
-    bool Node::IsInt() const {
-        return holds_alternative<int>(value_);
-    }
-
-    bool Node::IsDouble() const {
-        return holds_alternative<double>(value_) || holds_alternative<int>(value_);
-    }
-
-    bool Node::IsPureDouble() const {
-        return holds_alternative<double>(value_);
-    }
-
-    bool Node::IsBool() const {
-        return holds_alternative<bool>(value_);
-    }
-
-    bool Node::IsString() const {
-        return holds_alternative<std::string>(value_);
-    }
-
+    }  
     bool Node::IsNull() const {
-        return holds_alternative<std::nullptr_t>(value_);
+        return std::holds_alternative<std::nullptr_t>(*this);
     }
-
+    bool Node::IsInt() const {
+        return std::holds_alternative<int>(*this);
+    }
+    bool Node::IsDouble() const {
+        return std::holds_alternative<double>(*this) || std::holds_alternative<int>(*this);
+    }
+    bool Node::IsPureDouble() const {
+        return std::holds_alternative<double>(*this);
+    }
+    bool Node::IsString() const {
+        return std::holds_alternative<std::string>(*this);
+    }
     bool Node::IsArray() const {
-        return holds_alternative<Array>(value_);
+        return std::holds_alternative<Array>(*this);
     }
-
     bool Node::IsMap() const {
-        return holds_alternative<Dict>(value_);
+        return std::holds_alternative<Dict>(*this);
     }
-
+    bool Node::IsBool() const {
+        return std::holds_alternative<bool>(*this);
+    }
 
     int Node::AsInt() const {
-        if (!IsInt()) throw std::logic_error("wrong type");
-        return std::get<int>(value_);
+        if (Node::IsInt()) {
+            return std::get<int>(*this);
+        }
+        else {
+            throw std::logic_error("not an integer");
+        }
     }
 
     bool Node::AsBool() const {
-        if (!IsBool()) throw std::logic_error("wrong type");
-        return std::get<bool>(value_);
+        if (Node::IsBool()) {
+            return std::get<bool>(*this);
+        }
+        else {
+            throw std::logic_error("not a boolean");
+        }
     }
 
     double Node::AsDouble() const {
-        if (!IsDouble()) throw std::logic_error("wrong type");
-        if (IsInt()) return static_cast<double>(std::get<int>(value_));
-        return std::get<double>(value_);
+        if (Node::IsInt()) {
+            return static_cast<double>(std::get<int>(*this));
+        }
+        else if (IsDouble()) {
+            return std::get<double>(*this);
+        }
+        else {
+            throw std::logic_error("not a double");
+        }
     }
 
     const std::string& Node::AsString() const {
-        if (!IsString()) throw std::logic_error("wrong type");
-        return std::get<std::string>(value_);
+        if (Node::IsString()) {
+            return std::get<std::string>(*this);
+        }
+        else {
+            throw std::logic_error("not a string");
+        }
     }
 
     const Array& Node::AsArray() const {
-        if (!IsArray()) throw std::logic_error("wrong type");
-        return std::get<Array>(value_);
+        if (Node::IsArray()) {
+            return std::get<Array>(*this);
+        }
+        else {
+            throw std::logic_error("not an array");
+        }
     }
 
     const Dict& Node::AsMap() const {
-        if (!IsMap()) throw std::logic_error("wrong type");
-        return std::get<Dict>(value_);
+        if (Node::IsMap()) {
+            return std::get<Dict>(*this);
+        }
+        else {
+            throw std::logic_error("not a dict");
+        }
     }
 
-    const Node::Value& Node::GetValue() const {
-        return value_;
+    const Value& Node::GetValue() const {
+        return  *this;
     }
 
     bool Node::operator==(const Node& rhs) const {
-        return value_ == rhs.value_;
+        return *this == rhs;
     }
 
     bool Node::operator!=(const Node& rhs) const {
-        return !(value_ == rhs.value_);
+        return !(*this == rhs);
     }
 
     Document::Document(Node root)
@@ -352,7 +341,7 @@ namespace json {
     }
 
 
-   
+
     void PrintValue(std::nullptr_t, const PrintContext& ctx) {
         ctx.out << "null"sv;
     }

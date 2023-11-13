@@ -52,10 +52,10 @@ namespace transport_catalog {
 			throw std::invalid_argument("bus not found");
 		}
 		if (bus->circle) {
-			result.stops = bus->stops.size() ;
+			result.stops = bus->stops.size();
 		}
 		else {
-			result.stops = bus->stops.size() * 2 -1;
+			result.stops = bus->stops.size() * 2 - 1;
 		}
 
 		int fact_length = 0;
@@ -93,11 +93,11 @@ namespace transport_catalog {
 	}
 
 	const std::map<std::string_view, const Bus*> TransportCatalogue::SortAllBuses() const {
-	   std::map<std::string_view, const Bus*> result;
+		std::map<std::string_view, const Bus*> result;
 		for (auto& bus : busname_to_bus_) {
 			result.emplace(bus);
 		}
 		return result;
-      }
-} //namespace transport_catalog
+	}
+}
 

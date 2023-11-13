@@ -1,67 +1,30 @@
 #include "request_handler.h"
 
+/*
+ * Здесь можно было бы разместить код обработчика запросов к базе, содержащего логику, которую не
+ * хотелось бы помещать ни в transport_catalogue, ни в json reader.
+ *
+ * Если вы затрудняетесь выбрать, что можно было бы поместить в этот файл,
+ * можете оставить его пустым.
+ */
+ 
 
-void RequestHandler::RequestOut(const json::Node& requests) const {
-	json::Array result; 
-	for (auto& request: requests.AsArray()) {
-		auto& request_map = request.AsMap();
-		if (request_map.at("type").AsString() == "Stop") {
-			result.push_back(PrintStop(request_map).AsMap());
-		}
-		if (request_map.at("type").AsString() == "Bus") {
-			result.push_back(PrintBus(request_map).AsMap());
-		}
-		if (request_map.at("type").AsString() == "Map") {
-			result.push_back(PrintMap(request_map).AsMap());
-		}
-	}
-	json::Print(json::Document{ result }, std::cout);
+transport_catalog::BusInfo RequestHandler::GetBusStat(const std::string_view bus_number) const {
+	return catalogue_.GetBusinfo(bus_number);
+
+}
+const std::set<std::string> RequestHandler::GetBusesByStop(std::string_view stop_name) const {
+	return catalogue_.FindStop(stop_name)->buses;
 }
 
-const json::Node RequestHandler::PrintStop(const json::Dict& request_map) const {
-	json::Dict result;
-	std::string stop_name = request_map.at("name").AsString();
-	result["request_id"] = request_map.at("id").AsInt();
-	if (!catalogue_.FindStop(stop_name)) {
-		result["error_message"] = json::Node{ static_cast<std::string>("not found") };
-	}
-	else {
-		json::Array buses;
-		for (auto& bus : catalogue_.BusesOnStop(stop_name)) {
-			buses.push_back(bus);
-		}
-		result["buses"] = buses;
-	}
-	return json::Node { result };
+bool RequestHandler::IsBusNumber(const std::string_view bus_number) const {
+	return catalogue_.FindBus(bus_number);
 }
 
-const json::Node RequestHandler::PrintBus(const json::Dict& request_map) const {
-	json::Dict result;
-	std::string bus_name = request_map.at("name").AsString();
-	result["request_id"] = request_map.at("id").AsInt();
-	if (!catalogue_.FindBus(bus_name)) {
-		result["error_message"] = json::Node{ static_cast<std::string>("not found") };
-	}
-	else {
-		result["curvature"] = catalogue_.GetBusinfo(bus_name).courv;
-		result["route_length"] = catalogue_.GetBusinfo(bus_name).route_length;
-		result["stop_count"] = static_cast<int>(catalogue_.GetBusinfo(bus_name).stops);
-		result["unique_stop_count"] = static_cast<int>(catalogue_.GetBusinfo(bus_name).uniqe_stops);
-	}
-	return json::Node{ result };
-}
-
-const json::Node RequestHandler::PrintMap(const json::Dict& request_map) const {
-	json::Dict result;
-	result["request_id"] = request_map.at("id").AsInt();
-	std::ostringstream strm;
-	svg::Document map = RenderMap();
-	map.Render(strm);
-	result["map"] = strm.str();
-
-	return json::Node{ result };
+bool RequestHandler::IsStopName(const std::string_view stop_name) const {
+	return catalogue_.FindStop(stop_name);
 }
 
 svg::Document RequestHandler::RenderMap() const {
-	return renderer_.SVG(catalogue_.SortAllBuses());
+	return renderer_.GetSVG(catalogue_.SortAllBuses());
 }

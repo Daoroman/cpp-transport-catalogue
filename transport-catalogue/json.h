@@ -21,19 +21,10 @@ namespace json {
         using runtime_error::runtime_error;
     };
 
-    class Node {
+    using Value = std::variant<std::nullptr_t, std::string, int, double, bool, Array, Dict>;
+    class Node final : private Value {
     public:
-        /* Реализуйте Node, используя std::variant */
-        using Value = std::variant<std::nullptr_t, std::string, int, double, bool, Array, Dict>;
-
-        Node() = default;
-        Node(std::nullptr_t);
-        Node(std::string value);
-        Node(int value);
-        Node(double value);
-        Node(bool value);
-        Node(Array array);
-        Node(Dict map);
+        using variant::variant;
 
         bool IsInt() const;
         bool IsDouble() const;
@@ -56,8 +47,7 @@ namespace json {
         bool operator==(const Node& rhs) const;
         bool operator!=(const Node& rhs) const;
 
-    private:
-        Value value_;
+
     };
 
     class Document {
@@ -74,8 +64,6 @@ namespace json {
     };
 
     Document Load(std::istream& input);
-
-    //void Print(const Document& doc, std::ostream& output);
 
     // Контекст вывода, хранит ссылку на поток вывода и текущий отсуп
     struct PrintContext {
@@ -99,7 +87,7 @@ namespace json {
     void PrintValue(bool value, const PrintContext& ctx);
     void PrintValue(Array array, const PrintContext& ctx);
     void PrintValue(Dict dict, const PrintContext& ctx);
-    // Шаблон, подходящий для вывода double и int
+    
     template <typename Value>
     void PrintValue(const Value& value, const PrintContext& ctx) {
         ctx.out << value;
