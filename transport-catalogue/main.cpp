@@ -4,9 +4,8 @@
 int main() {
     transport_catalog::TransportCatalogue catalogue;
     JsonReader json_doc(std::cin);
-    
-    
     json_doc.FillRequests();
+
     json_doc.FillCatalogue(catalogue);
 
     const auto& stat_requests = json_doc.GetStatRequests();

@@ -42,7 +42,11 @@ namespace json {
         const Array& AsArray() const;
         const Dict& AsMap() const;
 
-        const Value& GetValue() const;
+        const Value& GetValue() const;    
+        
+        Value& GetValue() {
+            return *this;
+        }
 
         bool operator==(const Node& rhs) const;
         bool operator!=(const Node& rhs) const;
