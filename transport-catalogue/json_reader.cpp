@@ -250,7 +250,6 @@ const json::Node JsonReader::PrintStop(const json::Dict& request_map, RequestHan
 	const std::string& stop_name = request_map.at("name").AsString();
 	int id = request_map.at("id").AsInt();
 	if (!requesthandler.IsStopName(stop_name)) {
-		//result["error_message"] = json::Node{ static_cast<std::string>("not found") };
 		result = json::Builder{}
 			.StartDict()
 			.Key("request_id").Value(id)
@@ -285,8 +284,6 @@ const json::Node JsonReader::PrintMap(const json::Dict& request_map, RequestHand
 		.Key("map").Value(strm.str())
 		.EndDict()
 		.Build();
-	
-
 	return result;
 }
 
