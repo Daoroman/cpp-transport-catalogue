@@ -40,9 +40,10 @@ namespace transport_catalog {
 		Stop* FindStop(const std::string_view stopname);
 		Bus* FindBus(const std::string_view busname);
 		BusInfo GetBusinfo(const std::string_view busname);
-		size_t ComputeFactDistance(const std::pair<Stop*, Stop*>& couple_stops);
+		size_t ComputeFactDistance(const std::pair<Stop*, Stop*>& couple_stops) const;
 		const std::set<std::string> BusesOnStop(const std::string_view stop_name) const;
 		const std::map<std::string_view, const Bus*> SortAllBuses() const;
+		const std::map<std::string_view, const Stop*> SortAllStops() const;
 
 
 	private:

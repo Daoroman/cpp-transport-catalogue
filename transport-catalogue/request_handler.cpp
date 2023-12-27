@@ -1,12 +1,4 @@
 #include "request_handler.h"
-
-/*
- * Здесь можно было бы разместить код обработчика запросов к базе, содержащего логику, которую не
- * хотелось бы помещать ни в transport_catalogue, ни в json reader.
- *
- * Если вы затрудняетесь выбрать, что можно было бы поместить в этот файл,
- * можете оставить его пустым.
- */
  
 
 transport_catalog::BusInfo RequestHandler::GetBusStat(const std::string_view bus_number) const {
@@ -27,4 +19,12 @@ bool RequestHandler::IsStopName(const std::string_view stop_name) const {
 
 svg::Document RequestHandler::RenderMap() const {
 	return renderer_.GetSVG(catalogue_.SortAllBuses());
+}
+
+const std::optional<graph::Router<double>::RouteInfo> RequestHandler::GetOptimalRoute(const std::string_view stop_from, const std::string_view stop_to) const {
+	return router_.FindRoute(stop_from, stop_to);
+}
+
+const graph::DirectedWeightedGraph<double>& RequestHandler::GetRouterGraph() const {
+	return router_.GetGraph();
 }

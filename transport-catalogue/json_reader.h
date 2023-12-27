@@ -4,6 +4,7 @@
 #include "domain.h"
 #include "map_renderer.h"
 #include "request_handler.h"
+#include "transport_router.h"
 
 #include <iostream>
 
@@ -12,6 +13,7 @@ struct RequestsType
 	json::Node base_requests_{};
 	json::Node stat_requests_{};
 	json::Node render_settings_{};
+	json::Node route_settings_{};
 };
 
 class JsonReader {
@@ -26,10 +28,12 @@ public:
    const json::Node& GetBaseRequests() const;
    const json::Node& GetStatRequests() const;
    const json::Node& GetRenderSettings() const;
+   const json::Node& GetRouteSettings() const;
 
 	void FillCatalogue(transport_catalog::TransportCatalogue& catalogue);
 	void FillDistance(transport_catalog::TransportCatalogue& catalogue);
 	renderer::MapRenderer FillRenderSettings(const json::Dict& request_map) const;
+	transport_catalog::TransportRouter FillRouterSettings(const json::Node& route_settings) const;
 
 	void RequestOut(const json::Node& requests, RequestHandler& request) const;
 
@@ -38,6 +42,7 @@ public:
 	const json::Node PrintBus(const json::Dict& request_map, RequestHandler& rh) const;
 	const json::Node PrintStop(const json::Dict& request_map, RequestHandler& rh) const;
 	const json::Node PrintMap(const json::Dict& request_map, RequestHandler& rh) const;
+	const json::Node PrintRouting(const json::Dict& request_map, RequestHandler& rh) const;
 
 	
 

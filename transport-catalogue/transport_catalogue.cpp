@@ -37,7 +37,7 @@ namespace transport_catalog {
 		}
 		return busname_to_bus_.at(busname);
 	}
-	size_t TransportCatalogue::ComputeFactDistance(const std::pair<Stop*, Stop*>& couple_stops) {
+	size_t TransportCatalogue::ComputeFactDistance(const std::pair<Stop*, Stop*>& couple_stops) const{
 		if (!stop_distance_.count(couple_stops)) {
 			return stop_distance_.at({ couple_stops.second, couple_stops.first });
 		}
@@ -96,6 +96,14 @@ namespace transport_catalog {
 		std::map<std::string_view, const Bus*> result;
 		for (auto& bus : busname_to_bus_) {
 			result.emplace(bus);
+		}
+		return result;
+	}
+
+	const std::map<std::string_view, const Stop*> TransportCatalogue::SortAllStops() const {
+		std::map<std::string_view, const Stop*> result;
+		for (auto& stop : stopname_to_stop_) {
+			result.emplace(stop);
 		}
 		return result;
 	}
