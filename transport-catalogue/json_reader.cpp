@@ -205,9 +205,9 @@ renderer::RenderSettings JsonReader::FillColor(const json::Node& value) const{
 	return render_settings;
 }
 
-transport_catalog::TransportRouter JsonReader::FillRouterSettings(const json::Node& route_settings) const {
-	transport_catalog::TransportRouter settings;
-	return transport_catalog::TransportRouter{ route_settings.AsMap().at("bus_wait_time").AsInt(), route_settings.AsMap().at("bus_velocity").AsDouble() };
+transport_catalog::RouteData JsonReader::FillRouterSettings(const json::Node& route_settings) const {
+
+	return transport_catalog::RouteData{ route_settings.AsMap().at("bus_wait_time").AsInt(), route_settings.AsMap().at("bus_velocity").AsDouble() };
 }
 
 void JsonReader::RequestOut(const json::Node& requests, RequestHandler& requesthandler) const {

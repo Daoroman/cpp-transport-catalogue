@@ -33,7 +33,7 @@ public:
 	void FillCatalogue(transport_catalog::TransportCatalogue& catalogue);
 	void FillDistance(transport_catalog::TransportCatalogue& catalogue);
 	renderer::MapRenderer FillRenderSettings(const json::Dict& request_map) const;
-	transport_catalog::TransportRouter FillRouterSettings(const json::Node& route_settings) const;
+	transport_catalog::RouteData FillRouterSettings(const json::Node& route_settings) const;
 
 	void RequestOut(const json::Node& requests, RequestHandler& request) const;
 

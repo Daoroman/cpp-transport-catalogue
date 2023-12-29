@@ -24,6 +24,8 @@
         bool IsStopName(const std::string_view stop_name) const;
 
         const std::optional<graph::Router<double>::RouteInfo> GetOptimalRoute(const std::string_view stop_from, const std::string_view stop_to) const;
+       
+      
         const graph::DirectedWeightedGraph<double>& GetRouterGraph() const;
 
         svg::Document RenderMap() const;
@@ -31,7 +33,7 @@
     private:
 
       transport_catalog::TransportCatalogue& catalogue_;
-        const renderer::MapRenderer& renderer_;
-        const transport_catalog::TransportRouter& router_;
+      const renderer::MapRenderer& renderer_;
+      const transport_catalog::TransportRouter& router_;
     };
 

@@ -34,4 +34,9 @@ namespace transport_catalog {
 		bool circle;
 	};
 
+	struct RouteData {
+		int  wait_time_ = 0;
+		double bus_velocity_ = 0.0;
+	};
+
 }
