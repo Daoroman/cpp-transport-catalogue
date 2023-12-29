@@ -19,8 +19,8 @@ namespace transport_catalog {
 
 		const std::optional<graph::Router<double>::RouteInfo> FindRoute(const std::string_view stop_from, const std::string_view stop_to) const;
 		
-		// не совсем понял как не использовать этот метод, я использую данные из графа в функции
-	  //const json::Node JsonReader::PrintRouting
+		/ РЅРµ СЃРѕРІСЃРµРј РїРѕРЅСЏР» РєР°Рє РЅРµ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ СЌС‚РѕС‚ РјРµС‚РѕРґ, СЏ РёСЃРїРѕР»СЊР·СѓСЋ РґР°РЅРЅС‹Рµ РёР· РіСЂР°С„Р° РІ С„СѓРЅРєС†РёРё
+                //const json::Node JsonReader::PrintRouting
 		const graph::DirectedWeightedGraph<double>& GetGraph() const;
 
 	private:
