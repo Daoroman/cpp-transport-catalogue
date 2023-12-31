@@ -301,6 +301,7 @@ const json::Node JsonReader::PrintMap(const json::Dict& request_map, RequestHand
 	return result;
 }
 
+
 const json::Node JsonReader::PrintRouting(const json::Dict& request_map, RequestHandler& rh) const {
 	json::Node result;
 	const int id = request_map.at("id").AsInt();
@@ -318,10 +319,9 @@ const json::Node JsonReader::PrintRouting(const json::Dict& request_map, Request
 	}
 	else {
 		json::Array items;
-		double total_time = 0.0;
+		double total_time = routing.value().weight;
 		items.reserve(routing.value().edges.size());
-		for (auto& edge_id : routing.value().edges) {
-			const graph::Edge<double> edge = rh.GetRouterGraph().GetEdge(edge_id);
+		for (auto& edge : rh.GetRouteInformation()) {
 			if (edge.span == 0) {
 				items.emplace_back(json::Node(json::Builder{}
 					.StartDict()
@@ -330,8 +330,6 @@ const json::Node JsonReader::PrintRouting(const json::Dict& request_map, Request
 					.Key("type").Value("Wait")
 					.EndDict()
 					.Build()));
-
-				total_time += edge.weight;
 			}
 			else {
 				items.emplace_back(json::Node(json::Builder{}
@@ -342,8 +340,6 @@ const json::Node JsonReader::PrintRouting(const json::Dict& request_map, Request
 					.Key("type").Value("Bus")
 					.EndDict()
 					.Build()));
-
-				total_time += edge.weight;
 			}
 		}
 		
@@ -358,4 +354,3 @@ const json::Node JsonReader::PrintRouting(const json::Dict& request_map, Request
 
 	return result;
 }
-

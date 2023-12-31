@@ -12,7 +12,7 @@
     public:
 
         RequestHandler( transport_catalog::TransportCatalogue& catalogue, const renderer::MapRenderer& renderer, 
-           const transport_catalog::TransportRouter& router)
+             transport_catalog::TransportRouter& router)
             : catalogue_(catalogue), renderer_(renderer), router_(router)
         {
 
@@ -23,10 +23,8 @@
         bool IsBusNumber(const std::string_view bus_number) const;
         bool IsStopName(const std::string_view stop_name) const;
 
-        const std::optional<graph::Router<double>::RouteInfo> GetOptimalRoute(const std::string_view stop_from, const std::string_view stop_to) const;
-       
-      
-        const graph::DirectedWeightedGraph<double>& GetRouterGraph() const;
+       const std::optional<graph::Router<double>::RouteInfo> GetOptimalRoute(const std::string_view stop_from, const std::string_view stop_to) const;
+        const std::vector< graph::Edge<double>>& GetRouteInformation() const;
 
         svg::Document RenderMap() const;
 
@@ -34,6 +32,6 @@
 
       transport_catalog::TransportCatalogue& catalogue_;
       const renderer::MapRenderer& renderer_;
-      const transport_catalog::TransportRouter& router_;
+      transport_catalog::TransportRouter& router_;
     };
 

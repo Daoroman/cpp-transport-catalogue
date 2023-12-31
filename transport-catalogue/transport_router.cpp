@@ -12,12 +12,23 @@ namespace transport_catalog {
 		return graph_;
 	}
 
-	const std::optional<graph::Router<double>::RouteInfo> TransportRouter::FindRoute(const std::string_view stop_from, const std::string_view stop_to) const {
-		return router_->BuildRoute(name_to_vortex_.at(std::string(stop_from)), name_to_vortex_.at(std::string(stop_to)));
+	const std::optional<graph::Router<double>::RouteInfo> TransportRouter::FindRoute(const std::string_view stop_from, const std::string_view stop_to) {
+	const auto result = router_->BuildRoute(name_to_vortex_.at(std::string(stop_from)), name_to_vortex_.at(std::string(stop_to)));
+	if(result.has_value()) {
+	  route_info_.clear();
+	for (const auto& edge : result.value().edges) {
+		graph::Edge<double> info = graph_.GetEdge(edge);
+		route_info_.push_back(info);
+		}
+	}
+		return result;
 	}
 
-	const graph::DirectedWeightedGraph<double>& TransportRouter::GetGraph() const {
-		return graph_;
+
+
+	const std::vector< graph::Edge<double>>& TransportRouter::GetInformation() const {
+		return route_info_;
+
 	}
 
 	graph::DirectedWeightedGraph<double> TransportRouter::BuildWaitEdges(const TransportCatalogue& catalogue) {
